@@ -251,7 +251,10 @@
                             <div class="wave-bar"></div>
                             <div class="wave-bar"></div>
                         </div>
-                        <audio id="${videoId}" controls style="width: 90%; position: relative; z-index: 2;"></audio>
+                        <audio id="${videoId}" style="display: none;"></audio>
+                        <button class="custom-play-btn" onclick="togglePlay(event, '${videoId}', this)" style="position: relative; z-index: 2;">
+                            <i class="fas fa-play"></i>
+                        </button>
                     </div>
                     <div class="card-info">
                         <h2>${item.song}</h2>
@@ -315,6 +318,41 @@
                 });
             });
         })();
+    </script>
+    <script>
+        function togglePlay(event, audioId, btn) {
+            event.preventDefault();
+            event.stopPropagation();
+            const audio = document.getElementById(audioId);
+            const icon = btn.querySelector('i');
+            
+            if (audio.paused) {
+                // Pause all other audio elements first
+                document.querySelectorAll('audio').forEach(a => {
+                    if (a.id !== audioId && !a.paused) {
+                        a.pause();
+                    }
+                });
+                // Reset all icons
+                document.querySelectorAll('.custom-play-btn i').forEach(i => {
+                    i.className = 'fas fa-play';
+                    i.style.marginLeft = '4px';
+                });
+                
+                audio.play();
+                icon.className = 'fas fa-pause';
+                icon.style.marginLeft = '0';
+            } else {
+                audio.pause();
+                icon.className = 'fas fa-play';
+                icon.style.marginLeft = '4px';
+            }
+            
+            audio.onended = () => {
+                icon.className = 'fas fa-play';
+                icon.style.marginLeft = '4px';
+            };
+        }
     </script>
 </body>
 
